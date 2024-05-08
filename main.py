@@ -93,7 +93,7 @@ def perform_google_search(phone_numbers):
     results = {}
     for i, number in enumerate(phone_numbers['Phone Number']):
         # if i % 40 == 0 and i > 0:  # Every 40 requests
-        #     time.sleep(60)  # Sleep for 60 seconds
+        #  time.sleep(60)  # Sleep for 60 seconds
         query = f"{number}"
         business_hours = None
         days_of_week = None
@@ -212,7 +212,7 @@ def perform_google_search(phone_numbers):
                 row = tr.text.splitlines()
                 print(len(row))
                 print(row)
-                if len(row) > 2:  # Check if 'row' has at least three elements
+                if len(row) > 2:  # Check if 'row' has at least three elements;
                     days = row[2]
                     print(days)
                     if not re.search(r'\d', days):  # Check if 'hours' does not contain any digits
