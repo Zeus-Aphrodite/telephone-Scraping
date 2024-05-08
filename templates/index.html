@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Phone Number Web Scraper</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        label {
+            font-weight: bold;
+        }
+        input[type="text"] {
+            width: 300px;
+            padding: 8px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        input[type="submit"] {
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        input[type="submit"]:hover {
+            background-color: #0300b3;
+        }
+        .form {
+            align-items: center;
+            flex-direction: column;
+        }
+    </style>
+</head>
+<body>
+    <div class="form">
+        <!-- <h1>Phone Number Web Scraper</h1> -->
+        <form id="phoneForm">
+            <!-- <label for="phoneNumbers">Enter phone numbers (comma-separated):</label><br> -->
+            <input type="text" id="phoneNumbers" name="phoneNumbers"><br>
+            <input type="submit" value="Search">
+        </form>
+        <br>
+        <form id="csvForm" enctype="multipart/form-data">
+            <!-- <label for="csvFile">Upload a CSV file:</label><br> -->
+            <input type="file" id="csvFile" name="csvFile"><br>
+            <input type="submit" value="Import CSV">
+        </form>
+    </div>
+    <br>
+    <div id="results"></div>
+
+    <script>
+        document.getElementById('phoneForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+            var phoneNumbers = document.getElementById('phoneNumbers').value;
+            searchPhoneNumbers(phoneNumbers);
+        });
+
+        document.getElementById('csvForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+            var formData = new FormData(this);
+            importCSV(formData);
+        });
+
+        function searchPhoneNumbers(phoneNumbers) {
+            fetch('/search', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ phoneNumbers: phoneNumbers })
+            })
+            .then(response => response.json())
+            .then(data => {
+                displayResults(data);
+            })
+            .catch(error => console.error('Error:', error));
+        }
+
+        function importCSV(formData) {
+            fetch('/import-csv', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                // Display each phone number result separately
+                data.forEach(result => {
+                    displayResults([result]);  // Wrap in array to maintain compatibility with displayResults()
+                });
+            })
+            .catch(error => console.error('Error:', error));
+        }
+
+        function displayResults(results) {
+            var resultsDiv = document.getElementById('results');
+            resultsDiv.innerHTML = '';
+            results.forEach(function(result) {
+                var resultText = result.phone_number + ': ' + result.info + ' ' + result['more-info'] + '<br>';
+                resultsDiv.innerHTML += resultText;
+            });
+        }
+    </script>
+</body>
+</html>
