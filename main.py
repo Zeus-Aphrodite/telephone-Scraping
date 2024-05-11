@@ -153,7 +153,7 @@ def perform_google_search(phone_numbers):
 
             for tr in tr_elements:
                 row = tr.text.splitlines()
-                if len(row) > 1:  # Check if 'row' has at least two
+                if len(row) > 1:  # Check if 'row' has at 
                     hours = row[2]
                     if(re.search(r'\d', hours)):
                         if(re.search(r',', hours)):
@@ -206,7 +206,7 @@ def perform_google_search(phone_numbers):
                             break
                         else:
                             business_hours = hours
-                            break
+                            break  
 
             for tr in tr_elements:
                 row = tr.text.splitlines()
